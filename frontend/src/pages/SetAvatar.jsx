@@ -13,7 +13,7 @@ export default function SetAvatar() {
   const navigate = useNavigate();
 
   const [avatars, setAvatars] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(undefined);
 
   const toastOptions = {
@@ -79,25 +79,20 @@ export default function SetAvatar() {
             <h1>Pick an Avatar as your profile picture</h1>
           </div>
           <div className='avatars'>
-            {console.log(avatars)}
-            {avatars.map((avatar, index) => {
-              {
-                console.log(avatar);
-              }
+            {avatars.map((avatar, index) => (
               <div
                 key={avatar}
                 className={`avatar ${
                   selectedAvatar === index ? 'selected' : ''
                 }`}
               >
-                <h1>the image </h1>
                 <img
                   src={`data:image/svg+xml;base64,${avatar}`}
                   alt='avatar'
                   onClick={() => setSelectedAvatar(index)}
                 />
-              </div>;
-            })}
+              </div>
+            ))}
           </div>
           <button onClick={setProfilePicture} className='submit-btn'>
             Set as Profile Picture
