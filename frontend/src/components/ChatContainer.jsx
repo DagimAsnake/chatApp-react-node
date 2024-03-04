@@ -1,37 +1,40 @@
-import { useEffect } from "react";
-import styled from "styled-components";
-import Logout from "./Logout";
+import { useEffect } from 'react';
+import styled from 'styled-components';
+import Logout from './Logout';
+import ChatInput from './ChatInput';
 
 export default function ChatContainer({ currentChat }) {
-
-
   useEffect(() => {
     const getCurrentChat = async () => {
       if (currentChat) {
-        await JSON.parse(
-          localStorage.getItem('chat-app-current-user')
-        )._id;
+        await JSON.parse(localStorage.getItem('chat-app-current-user'))._id;
       }
     };
     getCurrentChat();
   }, [currentChat]);
 
+  const handleSendMsg = (msg) => {
+    console.log(msg);
+  };
+
   return (
     <Container>
-      <div className="chat-header">
-        <div className="user-details">
-          <div className="avatar">
+      <div className='chat-header'>
+        <div className='user-details'>
+          <div className='avatar'>
             <img
               src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
-              alt=""
+              alt=''
             />
           </div>
-          <div className="username">
+          <div className='username'>
             <h3>{currentChat.username}</h3>
           </div>
         </div>
         <Logout />
       </div>
+      <div className='chat-messages'></div>
+      <ChatInput handleSendMsg={handleSendMsg} />
     </Container>
   );
 }
