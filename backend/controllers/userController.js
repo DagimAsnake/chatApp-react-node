@@ -89,13 +89,13 @@ module.exports.getAllUsers = async (req, res, next) => {
 };
 
 module.exports.logOut = (req, res, next) => {
-  console.log(req.params.id)
+  // console.log(req.params.id)
   try {
     if (!req.params.id) {
       return res.json({ msg: 'User id is required ' });
     }
 
-    onlineUsers.delete(req.params.id);
+    // onlineUsers.delete(req.params.id);
 
     return res.status(200).send();
   } catch (ex) {

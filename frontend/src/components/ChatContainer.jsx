@@ -6,10 +6,11 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { sendMessageRoute, recieveMessageRoute } from "../utils/APIRoutes";
 
-export default function ChatContainer({ currentChat }) {
+export default function ChatContainer({ currentChat, socket }) {
 
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
+  const [arrivalMessage, setArrivalMessage] = useState(null);
 
   useEffect( () => {
     const getMessageChat = async () => {
@@ -38,12 +39,35 @@ export default function ChatContainer({ currentChat }) {
     const data = await JSON.parse(
       localStorage.getItem('chat-app-current-user')
     );
+
+    socket.current.emit("send-msg", {
+      to: currentChat._id,
+      from: data._id,
+      msg,
+    });
+
     await axios.post(sendMessageRoute, {
       from: data._id,
       to: currentChat._id,
       message: msg,
     });
+
+    const msgs = [...messages];
+    msgs.push({ fromSelf: true, message: msg });
+    setMessages(msgs);
   };
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("msg-recieve", (msg) => {
+        setArrivalMessage({ fromSelf: false, message: msg });
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
